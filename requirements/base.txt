@@ -5,10 +5,13 @@ Pillow==6.2.0
 psycopg2==2.7.4 --no-binary psycopg2
 
 # Django
-django==3.0.3
+django==2.2.11
 
 # Environment
 django-environ==0.4.5
+
+# Django Rest Framework
+djangorestframework==3.9.0
 
 # Passwords security
 argon2-cffi==18.3.0
