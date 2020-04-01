@@ -13,4 +13,4 @@ class CircleViewSet(viewsets.ModelViewSet):
     """Circle view set."""
 
     queryset = Circle.objects.all()
-    serializers_class = CircleModelSerializer
+    serializer_class = CircleModelSerializer
