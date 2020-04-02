@@ -1,7 +1,8 @@
 """Users views."""
 
 # Django REST Framework
-from rest_framework import status
+from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -14,11 +15,15 @@ from cride.users.serializers import (
 )
 
 
-class UserLoginAPIView(APIView):
-    """User Login API View"""
+class UserViewSets(viewsets.GenericViewSet):
+    """User view sets.
 
-    def post(self, request, *args, **kwargs):
-        """Handle Http Post Request"""
+    Handle login, signup and verificaytion
+    """
+
+    @action(detail=False, methods=['post'])
+    def login(self, request):
+        """User Login."""
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user, token = serializer.save()
@@ -28,11 +33,9 @@ class UserLoginAPIView(APIView):
         }
         return Response(data, status=status.HTTP_201_CREATED)
 
-
-class UserSignUpAPIView(APIView):
-    """User Sign Up API View"""
-
-    def post(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'])
+    def signup(self, request):
+        """User Signup."""
         """Handle Http Post Request"""
         serializer = UserSignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -40,12 +43,9 @@ class UserSignUpAPIView(APIView):
         data = UserModelSerializer(user).data
         return Response(data, status=status.HTTP_201_CREATED)
 
-
-class AccountVerificationAPIView(APIView):
-    """Account Verification API View"""
-
-    def post(self, request, *args, **kwargs):
-        """Handle Http Post Request"""
+    @action(detail=False, methods=['post'])
+    def verify(self, request):
+        """Account Verification"""
         serializer = AccountVerificationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
