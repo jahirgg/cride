@@ -4,9 +4,17 @@
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
+# Permissions
+
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated
+)
+from cride.users.permissions import IsAccountOwner
 
 # Serializers
+from cride.circles.serializers import CircleModelSerializer
 from cride.users.serializers import (
     UserLoginSerializer,
     UserModelSerializer,
@@ -14,14 +22,43 @@ from cride.users.serializers import (
     AccountVerificationSerializer
 )
 
+# Models
+from cride.users.models import User
+from cride.circles.models import Circle
 
-class UserViewSets(viewsets.GenericViewSet):
+
+class UserViewSet(mixins.RetrieveModelMixin,
+                  mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     """User view sets.
 
-    Handle login, signup and verificaytion
+    Handle login, signup and verification
     """
 
-    @action(detail=False, methods=['post'])
+    serializer_class = UserModelSerializer
+    lookup_field = 'username'
+    lookup_value_regex = r"[\w.]+"
+
+
+    def get_queryset(self):
+        """Restrict list to only active clients."""
+        queryset = User.objects.all()
+        if self.action == 'list':
+            return queryset.filter(is_active=True, is_client=True)
+        return queryset
+
+    def get_permissions(self):
+        """Assign permissions based on actions."""
+        #import pdb; pdb.set_trace()
+        if self.action in ['signup', 'login', 'verify']:
+            permissions = [AllowAny,]
+        elif self.action in 'retrieve':
+            permissions = [IsAuthenticated, IsAccountOwner]
+        else:
+            permissions = [IsAuthenticated]
+        return [permission() for permission in permissions]
+
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
     def login(self, request):
         """User Login."""
         serializer = UserLoginSerializer(data=request.data)
@@ -36,7 +73,6 @@ class UserViewSets(viewsets.GenericViewSet):
     @action(detail=False, methods=['post'])
     def signup(self, request):
         """User Signup."""
-        """Handle Http Post Request"""
         serializer = UserSignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -45,9 +81,23 @@ class UserViewSets(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['post'])
     def verify(self, request):
-        """Account Verification"""
+        """Account Verification."""
         serializer = AccountVerificationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         data = {'message': "Congratulations! Now go share some rides!"}
         return Response(data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, *args, **kwargs):
+        """Add extra data to the response."""
+        response = super(UserViewSet, self).retrieve(request, *args, **kwargs)
+        circles = Circle.objects.filter(
+            members=request.user,
+            membership__is_active=True
+        )
+        data = {
+            'users': response.data,
+            'circles': CircleModelSerializer(circles, many=True).data
+        }
+        response.data = data
+        return response
