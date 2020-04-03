@@ -13,6 +13,9 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.validators import UniqueValidator
 
+# Serializers
+from cride.users.serializers.profile import ProfileModelSerializer
+
 # Models
 from cride.users.models import User, Profile
 
@@ -25,6 +28,8 @@ import jwt
 class UserModelSerializer(serializers.ModelSerializer):
     """User Model serializer"""
 
+    profile = ProfileModelSerializer(read_only=True)
+    
     class Meta:
         """Meta Class"""
         model = User
@@ -33,7 +38,8 @@ class UserModelSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'email',
-            'phone_number'
+            'phone_number',
+            'profile'
         )
 
 

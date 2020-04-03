@@ -19,7 +19,8 @@ from cride.users.serializers import (
     UserLoginSerializer,
     UserModelSerializer,
     UserSignUpSerializer,
-    AccountVerificationSerializer
+    AccountVerificationSerializer,
+    ProfileModelSerializer
 )
 
 # Models
@@ -29,6 +30,7 @@ from cride.circles.models import Circle
 
 class UserViewSet(mixins.RetrieveModelMixin,
                   mixins.ListModelMixin,
+                  mixins.UpdateModelMixin,
                   viewsets.GenericViewSet):
     """User view sets.
 
@@ -52,7 +54,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
         #import pdb; pdb.set_trace()
         if self.action in ['signup', 'login', 'verify']:
             permissions = [AllowAny,]
-        elif self.action in 'retrieve':
+        elif self.action in ['retrieve', 'update', 'partial_update']:
             permissions = [IsAuthenticated, IsAccountOwner]
         else:
             permissions = [IsAuthenticated]
@@ -87,6 +89,22 @@ class UserViewSet(mixins.RetrieveModelMixin,
         serializer.save()
         data = {'message': "Congratulations! Now go share some rides!"}
         return Response(data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['put', 'patch'])
+    def profile(self, request, *args, **kwargs):
+        """Update profile data."""
+        user = self.get_object()
+        profile = user.profile
+        partial = request.method == 'PATCH'
+        serializer = ProfileModelSerializer(
+            profile,
+            data=request.data,
+            partial=partial
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = UserModelSerializer(user).data
+        return Response(data)
 
     def retrieve(self, request, *args, **kwargs):
         """Add extra data to the response."""
