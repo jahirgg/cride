@@ -4,7 +4,7 @@
 from django.apps import AppConfig
 
 
-class CirclesAppConfig(AppConfig):
+class RidesAppConfig(AppConfig):
     """Rides app config."""
 
     name = 'cride.rides'
