@@ -12,7 +12,7 @@ from .views import rides as rides_views
 router = DefaultRouter()
 router.register(
     r'circles/(?P<slug_name>[-a-zA-Z0-9_]*)/rides',
-    rides_views.RidesViewSet,
+    rides_views.RideViewSet,
     basename='ride'
 )
 urlpatterns = [
