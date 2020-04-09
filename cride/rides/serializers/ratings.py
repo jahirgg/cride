@@ -24,7 +24,7 @@ class CreateRideRatingSerializer(serializers.ModelSerializer):
         fields = ('rating', 'comments')
 
     def validate(self,data):
-        """Verify rating hasn't been eliminated before."""
+        """Verify rating hasn't been given before."""
         user = self.context['request'].user
         ride = self.context['ride']
 
@@ -37,7 +37,7 @@ class CreateRideRatingSerializer(serializers.ModelSerializer):
             rating_user=user
         )
         if q.exists():
-            raise serializers.ValidationError('Rating has already been eliminated')
+            raise serializers.ValidationError('Rating has already been given.')
         return data
 
     def create(self, data):
