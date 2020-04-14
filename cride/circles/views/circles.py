@@ -17,6 +17,7 @@ from cride.circles.serializers import CircleModelSerializer
 # Model
 from cride.circles.models import Circle, Membership
 
+
 class CircleViewSet(mixins.CreateModelMixin,
                     mixins.RetrieveModelMixin,
                     mixins.UpdateModelMixin,

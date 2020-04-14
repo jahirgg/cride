@@ -28,7 +28,7 @@ class Circle(CRideModel):
     members = models.ManyToManyField(
         'users.User',
         through='circles.Membership',
-        through_fields = ('circle','user' )
+        through_fields=('circle', 'user')
     )
 
     # Stats
@@ -60,7 +60,6 @@ class Circle(CRideModel):
         """Return circle name."""
         return self.name
 
-
     class Meta(CRideModel.Meta):
         """Meta class"""
-        ordering = ['-rides_taken','-rides_offered']
+        ordering = ['-rides_taken', '-rides_offered']

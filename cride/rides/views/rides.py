@@ -30,6 +30,7 @@ from cride.circles.models import Circle
 from datetime import timedelta
 from django.utils import timezone
 
+
 class RideViewSet(mixins.CreateModelMixin,
                   mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
@@ -81,7 +82,7 @@ class RideViewSet(mixins.CreateModelMixin,
     def get_queryset(self):
         """Return active circle's rides."""
         offset = timezone.now() + timedelta(minutes=10)
-        ##import pdb; pdb.set_trace()
+
         if self.action in ['update', 'finish']:
             return self.circle.ride_set.all()
         return self.circle.ride_set.filter(
@@ -128,7 +129,7 @@ class RideViewSet(mixins.CreateModelMixin,
         ride = self.get_object()
         serializer_class = self.get_serializer_class()
         context = self.get_serializer_context()
-        conetext['ride'] = ride
+        context['ride'] = ride
         serializer = serializer_class(data=request.data, context=context)
         serializer.is_valid(raise_exception=True)
         ride = serializer.save()

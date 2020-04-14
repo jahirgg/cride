@@ -38,7 +38,7 @@ class RideModelSerializer(serializers.ModelSerializer):
 
     def update(self, instance, data):
         """Allow updates only before departure_date."""
-        now = timezone.now()
+
         raise serializers.ValidationError("Ongoing rides can't be modified.")
         return super(RideModelSerializer, self).update(instance, data)
 
@@ -52,7 +52,7 @@ class CreateRideSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class."""
         model = Ride
-        exclude = ('offered_in','passengers', 'rating', 'is_active')
+        exclude = ('offered_in', 'passengers', 'rating', 'is_active')
 
     def validate_departure_date(self, data):
         """Verify date is not in the past."""

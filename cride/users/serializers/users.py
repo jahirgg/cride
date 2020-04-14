@@ -4,7 +4,6 @@
 from django.conf import settings
 from django.contrib.auth import password_validation, authenticate
 from django.core.validators import RegexValidator
-from django.utils import timezone
 
 # Django REST Framework
 from rest_framework import serializers
@@ -20,9 +19,8 @@ from cride.users.models import User, Profile
 # Celery
 from cride.taskapp.tasks import send_confirmation_email
 
-# Utilities
-from datetime import timedelta
-
+# JWT
+import jwt
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -67,7 +65,7 @@ class UserSignUpSerializer(serializers.Serializer):
     )
 
     phone_number = serializers.CharField(
-        validators = [phone_regex]
+        validators=[phone_regex]
     )
 
     password = serializers.CharField(min_length=8, max_length=64)
@@ -99,9 +97,6 @@ class UserSignUpSerializer(serializers.Serializer):
         Profile.objects.create(user=user)
         send_confirmation_email.delay(user_pk=user.pk)
         return user
-
-
-
 
 
 class UserLoginSerializer(serializers.Serializer):

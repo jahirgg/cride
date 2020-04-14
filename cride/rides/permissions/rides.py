@@ -11,6 +11,7 @@ class IsNotRideOwner(BasePermission):
         """Verify requesting user is not the ride's owner."""
         return not request.user == obj.offered_by
 
+
 class IsRideOwner(BasePermission):
     """Verify requesting user is the ride creator."""
 

@@ -3,7 +3,6 @@
 # Django
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
-from django.core.validators import RegexValidator
 from django.template.loader import render_to_string
 from django.utils import timezone
 
@@ -27,7 +26,7 @@ def send_confirmation_email(user_pk):
     """Send account verification link to given user."""
     for i in range(30):
         time.sleep(1)
-        print("Sleeping ",str(i+1))
+        print("Sleeping ", str(i+1))
     user = User.objects.get(pk=user_pk)
     verification_token = gen_verification_token(user)
 
@@ -43,6 +42,7 @@ def send_confirmation_email(user_pk):
 
     print('Sending email')
 
+
 def gen_verification_token(user):
     """Create JWT token that the user can use to verify his account."""
     exp_date = timezone.now() + timedelta(days=3)
@@ -54,6 +54,7 @@ def gen_verification_token(user):
     token = jwt.encode(payload, settings.SECRET_KEY, 'HS256')
 
     return token.decode()
+
 
 @periodic_task(name='disable_finished_rides', run_every=timedelta(minutes=30))
 def disable_finished_rides():

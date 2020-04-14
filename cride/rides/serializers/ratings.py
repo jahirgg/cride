@@ -16,14 +16,13 @@ class CreateRideRatingSerializer(serializers.ModelSerializer):
     rating = serializers.IntegerField(min_value=1, max_value=5)
     comments = serializers.CharField(required=False)
 
-
     class Meta:
         """Meta class."""
 
         model = Rating
         fields = ('rating', 'comments')
 
-    def validate(self,data):
+    def validate(self, data):
         """Verify rating hasn't been given before."""
         user = self.context['request'].user
         ride = self.context['ride']
@@ -54,7 +53,7 @@ class CreateRideRatingSerializer(serializers.ModelSerializer):
 
         ride_avg = round(
             Rating.objects.filter(
-                circle.self.context['circle'],
+                circle=self.context['circle'],
                 ride=self.context['ride'],
             ).aggregate(Avg('rating'))['rating__avg'],
             1

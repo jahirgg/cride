@@ -11,7 +11,8 @@ from cride.users.models import User, Profile
 class CustomUserAdmin(UserAdmin):
     """User model admin"""
 
-    list_display = ('email', 'username', 'first_name',
+    list_display = (
+        'email', 'username', 'first_name',
         'last_name', 'is_staff', 'is_client'
     )
     list_filter = ('is_client', 'is_staff', 'created', 'modified')
@@ -26,7 +27,6 @@ class ProfileUserAdmin(admin.ModelAdmin):
         'user__lastname'
     )
     list_filter = ('reputation', )
-
 
 
 admin.site.register(User, CustomUserAdmin)

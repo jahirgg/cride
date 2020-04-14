@@ -41,7 +41,6 @@ class UserViewSet(mixins.RetrieveModelMixin,
     lookup_field = 'username'
     lookup_value_regex = r"[\w.]+"
 
-
     def get_queryset(self):
         """Restrict list to only active clients."""
         queryset = User.objects.all()
@@ -51,9 +50,9 @@ class UserViewSet(mixins.RetrieveModelMixin,
 
     def get_permissions(self):
         """Assign permissions based on actions."""
-        #import pdb; pdb.set_trace()
+
         if self.action in ['signup', 'login', 'verify']:
-            permissions = [AllowAny,]
+            permissions = [AllowAny, ]
         elif self.action in ['retrieve', 'update', 'partial_update']:
             permissions = [IsAuthenticated, IsAccountOwner]
         else:

@@ -67,7 +67,7 @@ class MembershipViewSet(mixins.ListModelMixin,
     def perform_destroy(self, instance):
         """Disable membership."""
         instance.is_active = False
-        isntance.save
+        instance.save
 
     @action(detail=True, methods=['get'])
     def invitations(self, request, *args, **kwargs):
@@ -94,7 +94,7 @@ class MembershipViewSet(mixins.ListModelMixin,
         diff = member.remaining_invitations - len(unused_invitations)
 
         invitations = [x[0] for x in unused_invitations]
-        for i in range(0,diff):
+        for i in range(0, diff):
             invitations.append(
                 Invitation.objects.create(
                     issued_by=request.user,
@@ -110,7 +110,7 @@ class MembershipViewSet(mixins.ListModelMixin,
 
     def create(self, request, *args, **kwargs):
         """Handle member creation from  invitation code."""
-        
+
         serializer = AddMemberSerializer(
             data=request.data,
             context={"circle": self.circle, "request": request}

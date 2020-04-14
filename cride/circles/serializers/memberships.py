@@ -43,6 +43,7 @@ class MembershipModelSerializer(serializers.ModelSerializer):
             'invited_by'
         )
 
+
 class AddMemberSerializer(serializers.Serializer):
     """Add member serializer.
 
@@ -51,7 +52,6 @@ class AddMemberSerializer(serializers.Serializer):
     """
 
     invitation_code = serializers.CharField(min_length=8)
-
 
     def validate_user(self, data):
         """Vefify user isn't already a member."""

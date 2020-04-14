@@ -41,4 +41,3 @@ class IsSelfMember(BasePermission):
     def has_object_permission(self, request, view, obj):
         """Allow access only if member is owned by the requesting user."""
         return request.user == obj.user
-        

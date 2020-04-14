@@ -9,6 +9,7 @@ from cride.utils.models import CRideModel
 # Managers
 from cride.circles.managers import InvitationManager
 
+
 class Invitation(CRideModel):
     """Cricle invitation.
 
