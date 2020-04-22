@@ -61,7 +61,7 @@ class CircleAdmin(admin.ModelAdmin):
         ).order_by('departure_date')
 
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+        response['Content-Disposition'] = 'attachment; filename="rides.csv"'
 
         writer = csv.writer(response)
         writer.writerow([
