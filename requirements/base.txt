@@ -28,4 +28,4 @@ flower==0.9.3
 tornado==4.5.2
 
 # JWT
-pyjwt==1.7.1
+pyjwt==2.4.0
